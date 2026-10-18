@@ -9,4 +9,6 @@ include_directories(include)
 
 add_executable(timetable
     src/main.cpp
+    src/data/DataLoader.cpp
+    src/validation/DataValidator.cpp
 )

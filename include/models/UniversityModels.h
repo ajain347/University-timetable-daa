@@ -1,12 +1,17 @@
+#ifndef UNIVERSITY_MODELS_H
+#define UNIVERSITY_MODELS_H
+
+#include <string>
 #include <vector>
 
 struct Course {
+    int id;
     std::string code;
     std::string name;
-    int facultId;
+    int facultyId;
     int sectionId;
     int students;
-    int lecturePerWeek;
+    int lecturesPerWeek;
     bool requiresLab;
 };
 
@@ -43,3 +48,5 @@ struct TimetableEntry {
     int roomId;
     int slotId;
 };
+
+#endif

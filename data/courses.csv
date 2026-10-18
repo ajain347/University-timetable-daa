@@ -1,0 +1,9 @@
+id,code,name,facultyId,sectionId,students,lecturesPerWeek,requiresLab
+1,CSE301,Design and Analysis of Algorithms,1,1,60,3,0
+2,CSE302,Operating Systems,2,1,60,3,0
+3,CSE303,Data Communication and Networks,3,1,60,3,0
+4,CSE304,Machine Learning,4,1,60,3,1
+5,CSE301,Design and Analysis of Algorithms,1,2,55,3,0
+6,CSE302,Operating Systems,2,2,55,3,0
+7,CSE303,Data Communication and Networks,3,2,55,3,0
+8,CSE304,Machine Learning,4,2,55,3,1
