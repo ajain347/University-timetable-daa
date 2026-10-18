@@ -1,11 +1,54 @@
 #include <iostream>
 
 #include "models/UniversityModels.h"
+#include "data/DataLoader.h"
+#include "validation/DataValidator.h"
 
 using namespace std;
 
 int main()
 {
+    vector<Course> courses =
+        DataLoader::loadCourses("../data/courses.csv");
+
+    vector<Faculty> faculty =
+        DataLoader::loadFaculty("../data/faculty.csv");
+
+    vector<Room> rooms =
+        DataLoader::loadRooms("../data/rooms.csv");
+
+    vector<Section> sections =
+        DataLoader::loadSections("../data/sections.csv");
+
+    vector<TimeSlot> timeSlots =
+        DataLoader::loadTimeSlots("../data/timeslots.csv");
+
+    cout << "\nUniversity Data Loaded\n";
+    cout << "----------------------\n";
+    cout << "Courses:    " << courses.size() << "\n";
+    cout << "Faculty:    " << faculty.size() << "\n";
+    cout << "Rooms:      " << rooms.size() << "\n";
+    cout << "Sections:   " << sections.size() << "\n";
+    cout << "Time Slots: " << timeSlots.size() << "\n\n";
+
+    cout << "\nValidating university data...\n";
+
+    bool dataValid = DataValidator::validate(
+        courses,
+        faculty,
+        rooms,
+        sections,
+        timeSlots
+    );
+
+    if (dataValid) {
+        cout << "Validation successful: Dataset is valid.\n\n";
+    }
+    else {
+        cout << "Validation failed: Please fix the dataset.\n";
+        return 1;
+    }
+
     cout << "=============================================\n";
     cout << " UNIVERSITY TIMETABLE & CLASSROOM ALLOCATION\n";
     cout << "                 ENGINE\n";

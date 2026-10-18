@@ -1,0 +1,5 @@
+id,name,capacity,isLab
+1,Room-101,40,0
+2,Room-201,60,0
+3,Room-301,80,0
+4,Lab-1,70,1
