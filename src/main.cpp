@@ -4,6 +4,9 @@
 #include "data/DataLoader.h"
 #include "validation/DataValidator.h"
 
+#include "algorithms/searching/BinarySearch.h"
+#include "analysis/AlgorithmStats.h"
+
 using namespace std;
 
 int main()
@@ -48,6 +51,57 @@ int main()
         cout << "Validation failed: Please fix the dataset.\n";
         return 1;
     }
+
+    AlgorithmStats binaryStats;
+
+    int position = BinarySearch::iterativeCourseSearch(
+        courses,
+        5,
+        binaryStats
+    );
+
+    if (position != -1)
+    {
+        cout << "\nBinary Search Test\n";
+        cout << "Course found: " << courses[position].code << "\n";
+        cout << "Course ID: " << courses[position].id << "\n";
+        cout << "Comparisons: "
+             << binaryStats.comparisons << "\n";
+        cout << "Operations: "
+             << binaryStats.operations << "\n";
+    }
+    else
+    {
+        cout << "\nCourse not found.\n";
+    }
+
+
+    AlgorithmStats recursiveStats;
+
+int recursivePosition =
+    BinarySearch::recursiveCourseSearch(
+        courses,
+        5,
+        0,
+        static_cast<int>(courses.size()) - 1,
+        recursiveStats
+    );
+
+if (recursivePosition != -1)
+{
+    cout << "\nRecursive Binary Search Test\n";
+    cout << "Course found: "
+         << courses[recursivePosition].code << "\n";
+
+    cout << "Course ID: "
+         << courses[recursivePosition].id << "\n";
+
+    cout << "Comparisons: "
+         << recursiveStats.comparisons << "\n";
+
+    cout << "Operations: "
+         << recursiveStats.operations << "\n";
+}
 
     cout << "=============================================\n";
     cout << " UNIVERSITY TIMETABLE & CLASSROOM ALLOCATION\n";
