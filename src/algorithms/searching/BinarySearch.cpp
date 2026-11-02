@@ -11,18 +11,13 @@ int BinarySearch::iterativeCourseSearch(
     while (left <= right)
     {
         int middle = left + (right - left) / 2;
-
         stats.operations++;
-
         stats.comparisons++;
-
         if (courses[middle].id == targetId)
         {
             return middle;
         }
-
         stats.comparisons++;
-
         if (courses[middle].id < targetId)
         {
             left = middle + 1;
@@ -32,7 +27,6 @@ int BinarySearch::iterativeCourseSearch(
             right = middle - 1;
         }
     }
-
     return -1;
 }
 
@@ -47,20 +41,14 @@ int BinarySearch::recursiveCourseSearch(
     {
         return -1;
     }
-
     int middle = left + (right - left) / 2;
-
     stats.operations++;
-
     stats.comparisons++;
-
     if (courses[middle].id == targetId)
     {
         return middle;
     }
-
     stats.comparisons++;
-
     if (courses[middle].id < targetId)
     {
         return recursiveCourseSearch(
@@ -71,7 +59,6 @@ int BinarySearch::recursiveCourseSearch(
             stats
         );
     }
-
     return recursiveCourseSearch(
         courses,
         targetId,

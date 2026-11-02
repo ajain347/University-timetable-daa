@@ -6,6 +6,8 @@
 
 #include "algorithms/searching/BinarySearch.h"
 #include "analysis/AlgorithmStats.h"
+#include "algorithms/sorting/MergeSort.h"
+#include "algorithms/sorting/QuickSort.h"
 
 using namespace std;
 
@@ -102,6 +104,99 @@ if (recursivePosition != -1)
     cout << "Operations: "
          << recursiveStats.operations << "\n";
 }
+
+// ---------------- MERGE SORT TEST ----------------
+
+vector<Course> mergeTestCourses;
+
+mergeTestCourses.push_back(courses[7]); // ID 8
+mergeTestCourses.push_back(courses[2]); // ID 3
+mergeTestCourses.push_back(courses[5]); // ID 6
+mergeTestCourses.push_back(courses[1]); // ID 2
+mergeTestCourses.push_back(courses[6]); // ID 7
+mergeTestCourses.push_back(courses[0]); // ID 1
+mergeTestCourses.push_back(courses[4]); // ID 5
+mergeTestCourses.push_back(courses[3]); // ID 4;
+
+cout << "\nMerge Sort Test\n";
+
+cout << "Before sorting: ";
+
+for (const Course& c : mergeTestCourses)
+{
+    cout << c.id << " ";
+}
+
+AlgorithmStats mergeStats;
+
+MergeSort::sortCoursesById(
+    mergeTestCourses,
+    mergeStats
+);
+
+cout << "\nAfter sorting:  ";
+
+for (const Course& c : mergeTestCourses)
+{
+    cout << c.id << " ";
+}
+
+cout << "\nComparisons: "
+     << mergeStats.comparisons;
+
+cout << "\nOperations: "
+     << mergeStats.operations;
+
+cout << "\nMemory used: "
+     << mergeStats.memoryBytes
+     << " bytes\n";
+
+
+// ---------------- QUICK SORT TEST ----------------
+
+vector<Course> quickTestCourses;
+
+quickTestCourses.push_back(courses[8]); 
+quickTestCourses.push_back(courses[3]); 
+quickTestCourses.push_back(courses[6]); 
+quickTestCourses.push_back(courses[2]); 
+quickTestCourses.push_back(courses[7]); // 5
+quickTestCourses.push_back(courses[1]); // 6
+quickTestCourses.push_back(courses[5]); // 7
+quickTestCourses.push_back(courses[4]); // 8
+
+cout << "\nQuick Sort Test\n";
+
+cout << "Before sorting: ";
+
+for (const Course& c : quickTestCourses)
+{
+    cout << c.id << " ";
+}
+
+AlgorithmStats quickStats;
+
+QuickSort::sortCoursesById(
+    quickTestCourses,
+    quickStats
+);
+
+cout << "\nAfter sorting:  ";
+
+for (const Course& c : quickTestCourses)
+{
+    cout << c.id << " ";
+}
+
+cout << "\nComparisons: "
+     << quickStats.comparisons;
+
+cout << "\nOperations: "
+     << quickStats.operations;
+
+cout << "\nMemory used: "
+     << quickStats.memoryBytes
+     << " bytes\n";
 
     cout << "=============================================\n";
     cout << " UNIVERSITY TIMETABLE & CLASSROOM ALLOCATION\n";

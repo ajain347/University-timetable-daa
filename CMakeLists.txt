@@ -12,4 +12,6 @@ add_executable(timetable
     src/data/DataLoader.cpp
     src/validation/DataValidator.cpp
     src/algorithms/searching/BinarySearch.cpp
+    src/algorithms/sorting/MergeSort.cpp
+    src/algorithms/sorting/QuickSort.cpp
 )
