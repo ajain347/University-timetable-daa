@@ -8,6 +8,8 @@
 #include "analysis/AlgorithmStats.h"
 #include "algorithms/sorting/MergeSort.h"
 #include "algorithms/sorting/QuickSort.h"
+#include "algorithms/divide_conquer/MaximumSubarray.h"
+#include "algorithms/divide_conquer/FastExponentiation.h"
 
 using namespace std;
 
@@ -153,17 +155,16 @@ cout << "\nMemory used: "
 
 
 // ---------------- QUICK SORT TEST ----------------
-
 vector<Course> quickTestCourses;
 
-quickTestCourses.push_back(courses[8]); 
-quickTestCourses.push_back(courses[3]); 
-quickTestCourses.push_back(courses[6]); 
-quickTestCourses.push_back(courses[2]); 
-quickTestCourses.push_back(courses[7]); // 5
-quickTestCourses.push_back(courses[1]); // 6
-quickTestCourses.push_back(courses[5]); // 7
-quickTestCourses.push_back(courses[4]); // 8
+quickTestCourses.push_back(courses[7]); // ID 8
+quickTestCourses.push_back(courses[2]); // ID 3
+quickTestCourses.push_back(courses[5]); // ID 6
+quickTestCourses.push_back(courses[1]); // ID 2
+quickTestCourses.push_back(courses[6]); // ID 7
+quickTestCourses.push_back(courses[0]); // ID 1
+quickTestCourses.push_back(courses[4]); // ID 5
+quickTestCourses.push_back(courses[3]); // ID 4
 
 cout << "\nQuick Sort Test\n";
 
@@ -197,6 +198,35 @@ cout << "\nOperations: "
 cout << "\nMemory used: "
      << quickStats.memoryBytes
      << " bytes\n";
+
+// ---------------- MAXIMUM SUBARRAY TEST ----------------
+
+vector<int> workload = {-2, 4, -1, 3, -5, 2};
+
+AlgorithmStats maxStats;
+
+MaxSubarrayResult result =
+    MaximumSubarray::findMaximum(workload, maxStats);
+
+cout << "\nMaximum Subarray Test\n";
+
+cout << "Maximum Sum: " << result.sum << "\n";
+cout << "Start Index: " << result.left << "\n";
+cout << "End Index: " << result.right << "\n";
+
+cout << "Comparisons: " << maxStats.comparisons << "\n";
+cout << "Operations: " << maxStats.operations << "\n";
+
+// ---------------- FAST EXPONENTIATION TEST ----------------
+
+AlgorithmStats powerStats;
+
+long long answer = FastExponentiation::power(2,15,powerStats);
+
+cout << "\nFast Exponentiation Test\n";
+cout << "2^15 = " << answer << "\n";
+cout << "Multiplications: "
+     << powerStats.operations << "\n\n";
 
     cout << "=============================================\n";
     cout << " UNIVERSITY TIMETABLE & CLASSROOM ALLOCATION\n";

@@ -14,4 +14,6 @@ add_executable(timetable
     src/algorithms/searching/BinarySearch.cpp
     src/algorithms/sorting/MergeSort.cpp
     src/algorithms/sorting/QuickSort.cpp
+    src/algorithms/divide_conquer/MaximumSubarray.cpp
+    src/algorithms/divide_conquer/FastExponentiation.cpp
 )
