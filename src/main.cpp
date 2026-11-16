@@ -10,6 +10,9 @@
 #include "algorithms/sorting/QuickSort.h"
 #include "algorithms/divide_conquer/MaximumSubarray.h"
 #include "algorithms/divide_conquer/FastExponentiation.h"
+#include "timetable/TimetableAllocator.h"
+#include "timetable/TimetableValidator.h"
+#include "timetable/TimetableExporter.h"
 
 using namespace std;
 
@@ -216,6 +219,148 @@ cout << "End Index: " << result.right << "\n";
 
 cout << "Comparisons: " << maxStats.comparisons << "\n";
 cout << "Operations: " << maxStats.operations << "\n";
+
+
+    // -------- TIMETABLE GENERATION --------
+
+    AlgorithmStats allocationStats;
+
+    vector<TimetableEntry> timetable =
+        TimetableAllocator::generate(
+            courses,
+            rooms,
+            timeSlots,
+            allocationStats
+        );
+
+    int requiredLectures = 0;
+
+    for (const Course& course : courses)
+    {
+        requiredLectures += course.lecturesPerWeek;
+    }
+
+    cout << "\n========== TIMETABLE ALLOCATION ==========\n";
+
+    cout << "Required lectures: "
+         << requiredLectures << "\n";
+
+    cout << "Scheduled lectures: "
+         << timetable.size() << "\n";
+
+    cout << "Unscheduled lectures: "
+         << requiredLectures - timetable.size() << "\n";
+
+    cout << "Allocation checks: "
+         << allocationStats.comparisons << "\n";
+
+    cout << "==========================================\n";
+
+    if (static_cast<int>(timetable.size()) == requiredLectures)
+    {
+        cout << "All lectures scheduled successfully!\n";
+    }
+    else
+    {
+        cout << "Warning: Some lectures could not be scheduled.\n";
+    }
+
+    
+cout << "\n========== GENERATED TIMETABLE ==========\n";
+
+for (const TimetableEntry& entry : timetable)
+{
+    cout << "\n";
+
+    // Find course name
+    for (const Course& c : courses)
+    {
+        if (c.id == entry.courseId)
+        {
+            cout << "Subject: " << c.name << " | ";
+            break;
+        }
+    }
+
+    // Find faculty name
+    for (const Faculty& f : faculty)
+    {
+        if (f.id == entry.facultyId)
+        {
+            cout << "Faculty: " << f.name << " | ";
+            break;
+        }
+    }
+
+    // Find batch name
+    for (const Section& s : sections)
+    {
+        if (s.id == entry.sectionId)
+        {
+            cout << "Batch: " << s.name << " | ";
+            break;
+        }
+    }
+
+    // Find classroom
+    for (const Room& r : rooms)
+    {
+        if (r.id == entry.roomId)
+        {
+            cout << "Room: " << r.name << " | ";
+            break;
+        }
+    }
+
+    // Find day and time
+    for (const TimeSlot& t : timeSlots)
+    {
+        if (t.id == entry.slotId)
+        {
+            cout << "Day: " << t.day
+                 << " | Time: "
+                 << t.startHour << ":00-"
+                 << t.endHour << ":00";
+            break;
+        }
+    }
+
+    cout << "\n";
+}
+
+
+cout << "\n========== TIMETABLE VALIDATION ==========\n";
+
+bool timetableValid = TimetableValidator::validate(
+    timetable, courses, rooms, timeSlots
+);
+
+if (timetableValid)
+{
+    cout << "PASS: All required lectures scheduled without clashes.\n";
+
+    bool exported = TimetableExporter::exportCSV(
+        "../data/generated_timetable.csv",
+        timetable,
+        courses,
+        faculty,
+        sections,
+        rooms,
+        timeSlots
+    );
+
+    if (exported)
+        cout << "Timetable exported successfully.\n";
+    else
+        cout << "Error: Timetable export failed.\n";
+}
+else
+{
+    cout << "FAIL: Timetable contains violations or missing lectures.\n";
+    cout << "Export skipped.\n";
+}
+
+
 
 // ---------------- FAST EXPONENTIATION TEST ----------------
 

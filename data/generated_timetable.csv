@@ -1,0 +1,25 @@
+Day,StartHour,EndHour,Course,Faculty,Batch,Room
+Monday,9,10,Design and Analysis of Algorithms,Dr Sharma,CSE-A,Room-201
+Tuesday,9,10,Design and Analysis of Algorithms,Dr Sharma,CSE-A,Room-201
+Wednesday,9,10,Design and Analysis of Algorithms,Dr Sharma,CSE-A,Room-201
+Monday,10,11,Operating Systems,Dr Gupta,CSE-A,Room-201
+Tuesday,10,11,Operating Systems,Dr Gupta,CSE-A,Room-201
+Wednesday,10,11,Operating Systems,Dr Gupta,CSE-A,Room-201
+Monday,11,12,Data Communication and Networks,Dr Verma,CSE-A,Room-201
+Tuesday,11,12,Data Communication and Networks,Dr Verma,CSE-A,Room-201
+Wednesday,11,12,Data Communication and Networks,Dr Verma,CSE-A,Room-201
+Monday,12,13,Machine Learning,Dr Singh,CSE-A,Lab-1
+Tuesday,12,13,Machine Learning,Dr Singh,CSE-A,Lab-1
+Wednesday,12,13,Machine Learning,Dr Singh,CSE-A,Lab-1
+Monday,10,11,Design and Analysis of Algorithms,Dr Sharma,CSE-B,Room-301
+Tuesday,10,11,Design and Analysis of Algorithms,Dr Sharma,CSE-B,Room-301
+Wednesday,10,11,Design and Analysis of Algorithms,Dr Sharma,CSE-B,Room-301
+Monday,9,10,Operating Systems,Dr Gupta,CSE-B,Room-301
+Tuesday,9,10,Operating Systems,Dr Gupta,CSE-B,Room-301
+Wednesday,9,10,Operating Systems,Dr Gupta,CSE-B,Room-301
+Monday,12,13,Data Communication and Networks,Dr Verma,CSE-B,Room-201
+Tuesday,12,13,Data Communication and Networks,Dr Verma,CSE-B,Room-201
+Wednesday,12,13,Data Communication and Networks,Dr Verma,CSE-B,Room-201
+Monday,11,12,Machine Learning,Dr Singh,CSE-B,Lab-1
+Tuesday,11,12,Machine Learning,Dr Singh,CSE-B,Lab-1
+Wednesday,11,12,Machine Learning,Dr Singh,CSE-B,Lab-1

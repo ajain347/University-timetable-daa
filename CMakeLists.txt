@@ -16,4 +16,7 @@ add_executable(timetable
     src/algorithms/sorting/QuickSort.cpp
     src/algorithms/divide_conquer/MaximumSubarray.cpp
     src/algorithms/divide_conquer/FastExponentiation.cpp
+    src/timetable/TimetableAllocator.cpp
+    src/timetable/TimetableValidator.cpp
+    src/timetable/TimetableExporter.cpp
 )
