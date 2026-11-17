@@ -1,391 +1,528 @@
+
 #include <iostream>
+#include <vector>
+#include <string>
+#include <limits>
 
 #include "models/UniversityModels.h"
 #include "data/DataLoader.h"
 #include "validation/DataValidator.h"
-
-#include "algorithms/searching/BinarySearch.h"
-#include "analysis/AlgorithmStats.h"
-#include "algorithms/sorting/MergeSort.h"
-#include "algorithms/sorting/QuickSort.h"
-#include "algorithms/divide_conquer/MaximumSubarray.h"
-#include "algorithms/divide_conquer/FastExponentiation.h"
 #include "timetable/TimetableAllocator.h"
 #include "timetable/TimetableValidator.h"
 #include "timetable/TimetableExporter.h"
+#include "analysis/AlgorithmStats.h"
+#include "algorithms/sorting/MergeSort.h"
+#include "algorithms/searching/BinarySearch.h"
+#include "timetable/BacktrackingAllocator.h"
+#include <chrono>
 
 using namespace std;
 
 int main()
 {
-    vector<Course> courses =
-        DataLoader::loadCourses("../data/courses.csv");
-
-    vector<Faculty> faculty =
-        DataLoader::loadFaculty("../data/faculty.csv");
-
-    vector<Room> rooms =
-        DataLoader::loadRooms("../data/rooms.csv");
-
-    vector<Section> sections =
-        DataLoader::loadSections("../data/sections.csv");
-
-    vector<TimeSlot> timeSlots =
-        DataLoader::loadTimeSlots("../data/timeslots.csv");
-
-    cout << "\nUniversity Data Loaded\n";
-    cout << "----------------------\n";
-    cout << "Courses:    " << courses.size() << "\n";
-    cout << "Faculty:    " << faculty.size() << "\n";
-    cout << "Rooms:      " << rooms.size() << "\n";
-    cout << "Sections:   " << sections.size() << "\n";
-    cout << "Time Slots: " << timeSlots.size() << "\n\n";
-
-    cout << "\nValidating university data...\n";
-
-    bool dataValid = DataValidator::validate(
-        courses,
-        faculty,
-        rooms,
-        sections,
-        timeSlots
-    );
-
-    if (dataValid) {
-        cout << "Validation successful: Dataset is valid.\n\n";
-    }
-    else {
-        cout << "Validation failed: Please fix the dataset.\n";
-        return 1;
-    }
-
-    AlgorithmStats binaryStats;
-
-    int position = BinarySearch::iterativeCourseSearch(
-        courses,
-        5,
-        binaryStats
-    );
-
-    if (position != -1)
-    {
-        cout << "\nBinary Search Test\n";
-        cout << "Course found: " << courses[position].code << "\n";
-        cout << "Course ID: " << courses[position].id << "\n";
-        cout << "Comparisons: "
-             << binaryStats.comparisons << "\n";
-        cout << "Operations: "
-             << binaryStats.operations << "\n";
-    }
-    else
-    {
-        cout << "\nCourse not found.\n";
-    }
-
-
-    AlgorithmStats recursiveStats;
-
-int recursivePosition =
-    BinarySearch::recursiveCourseSearch(
-        courses,
-        5,
-        0,
-        static_cast<int>(courses.size()) - 1,
-        recursiveStats
-    );
-
-if (recursivePosition != -1)
-{
-    cout << "\nRecursive Binary Search Test\n";
-    cout << "Course found: "
-         << courses[recursivePosition].code << "\n";
-
-    cout << "Course ID: "
-         << courses[recursivePosition].id << "\n";
-
-    cout << "Comparisons: "
-         << recursiveStats.comparisons << "\n";
-
-    cout << "Operations: "
-         << recursiveStats.operations << "\n";
-}
-
-// ---------------- MERGE SORT TEST ----------------
-
-vector<Course> mergeTestCourses;
-
-mergeTestCourses.push_back(courses[7]); // ID 8
-mergeTestCourses.push_back(courses[2]); // ID 3
-mergeTestCourses.push_back(courses[5]); // ID 6
-mergeTestCourses.push_back(courses[1]); // ID 2
-mergeTestCourses.push_back(courses[6]); // ID 7
-mergeTestCourses.push_back(courses[0]); // ID 1
-mergeTestCourses.push_back(courses[4]); // ID 5
-mergeTestCourses.push_back(courses[3]); // ID 4;
-
-cout << "\nMerge Sort Test\n";
-
-cout << "Before sorting: ";
-
-for (const Course& c : mergeTestCourses)
-{
-    cout << c.id << " ";
-}
-
-AlgorithmStats mergeStats;
-
-MergeSort::sortCoursesById(
-    mergeTestCourses,
-    mergeStats
-);
-
-cout << "\nAfter sorting:  ";
-
-for (const Course& c : mergeTestCourses)
-{
-    cout << c.id << " ";
-}
-
-cout << "\nComparisons: "
-     << mergeStats.comparisons;
-
-cout << "\nOperations: "
-     << mergeStats.operations;
-
-cout << "\nMemory used: "
-     << mergeStats.memoryBytes
-     << " bytes\n";
-
-
-// ---------------- QUICK SORT TEST ----------------
-vector<Course> quickTestCourses;
-
-quickTestCourses.push_back(courses[7]); // ID 8
-quickTestCourses.push_back(courses[2]); // ID 3
-quickTestCourses.push_back(courses[5]); // ID 6
-quickTestCourses.push_back(courses[1]); // ID 2
-quickTestCourses.push_back(courses[6]); // ID 7
-quickTestCourses.push_back(courses[0]); // ID 1
-quickTestCourses.push_back(courses[4]); // ID 5
-quickTestCourses.push_back(courses[3]); // ID 4
-
-cout << "\nQuick Sort Test\n";
-
-cout << "Before sorting: ";
-
-for (const Course& c : quickTestCourses)
-{
-    cout << c.id << " ";
-}
-
-AlgorithmStats quickStats;
-
-QuickSort::sortCoursesById(
-    quickTestCourses,
-    quickStats
-);
-
-cout << "\nAfter sorting:  ";
-
-for (const Course& c : quickTestCourses)
-{
-    cout << c.id << " ";
-}
-
-cout << "\nComparisons: "
-     << quickStats.comparisons;
-
-cout << "\nOperations: "
-     << quickStats.operations;
-
-cout << "\nMemory used: "
-     << quickStats.memoryBytes
-     << " bytes\n";
-
-// ---------------- MAXIMUM SUBARRAY TEST ----------------
-
-vector<int> workload = {-2, 4, -1, 3, -5, 2};
-
-AlgorithmStats maxStats;
-
-MaxSubarrayResult result =
-    MaximumSubarray::findMaximum(workload, maxStats);
-
-cout << "\nMaximum Subarray Test\n";
-
-cout << "Maximum Sum: " << result.sum << "\n";
-cout << "Start Index: " << result.left << "\n";
-cout << "End Index: " << result.right << "\n";
-
-cout << "Comparisons: " << maxStats.comparisons << "\n";
-cout << "Operations: " << maxStats.operations << "\n";
-
-
-    // -------- TIMETABLE GENERATION --------
+    vector<Course> courses;
+    vector<Faculty> faculty;
+    vector<Room> rooms;
+    vector<Section> sections;
+    vector<TimeSlot> timeSlots;
+    vector<TimetableEntry> timetable;
 
     AlgorithmStats allocationStats;
 
-    vector<TimetableEntry> timetable =
-        TimetableAllocator::generate(
-            courses,
-            rooms,
-            timeSlots,
-            allocationStats
-        );
+    bool dataLoaded = false;
+    bool timetableGenerated = false;
 
-    int requiredLectures = 0;
+    int choice = -1;
 
-    for (const Course& course : courses)
+    while (choice != 0)
     {
-        requiredLectures += course.lecturesPerWeek;
-    }
+        cout << "\n========================================\n";
+        cout << " UNIVERSITY TIMETABLE ALLOCATION ENGINE\n";
+        cout << "========================================\n";
 
-    cout << "\n========== TIMETABLE ALLOCATION ==========\n";
+        cout << "1. Load University Data\n";
+        cout << "2. Generate Timetable\n";
+        cout << "3. View Timetable\n";
+        cout << "4. Search Timetable\n";
+        cout << "5. Constraint Diagnostics\n";
+        cout << "6. Algorithm Information\n";
+        cout << "7. Allocation Statistics\n";
+        cout << "0. Exit\n";
 
-    cout << "Required lectures: "
-         << requiredLectures << "\n";
+        cout << "\nEnter choice: ";
 
-    cout << "Scheduled lectures: "
-         << timetable.size() << "\n";
+        if (!(cin >> choice))
+        {
+            if (cin.eof()) break;
 
-    cout << "Unscheduled lectures: "
-         << requiredLectures - timetable.size() << "\n";
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid input. Enter a number.\n";
+            continue;
+        }
 
-    cout << "Allocation checks: "
-         << allocationStats.comparisons << "\n";
+        switch (choice)
+        {
+        case 1:
+        {
+            // Load into temporary vectors first
+            auto newCourses =
+                DataLoader::loadCourses("../data/courses.csv");
 
-    cout << "==========================================\n";
+            auto newFaculty =
+                DataLoader::loadFaculty("../data/faculty.csv");
 
-    if (static_cast<int>(timetable.size()) == requiredLectures)
-    {
-        cout << "All lectures scheduled successfully!\n";
-    }
-    else
-    {
-        cout << "Warning: Some lectures could not be scheduled.\n";
-    }
+            auto newRooms =
+                DataLoader::loadRooms("../data/rooms.csv");
 
-    
-cout << "\n========== GENERATED TIMETABLE ==========\n";
+            auto newSections =
+                DataLoader::loadSections("../data/sections.csv");
 
-for (const TimetableEntry& entry : timetable)
+            auto newSlots =
+                DataLoader::loadTimeSlots("../data/timeslots.csv");
+
+            if (newCourses.empty() || newFaculty.empty() ||
+                newRooms.empty() || newSections.empty() ||
+                newSlots.empty())
+            {
+                cout << "Failed to load complete university data.\n";
+                break;
+            }
+
+            if (!DataValidator::validate(
+                    newCourses, newFaculty, newRooms,
+                    newSections, newSlots))
+            {
+                cout << "Data validation failed.\n";
+                break;
+            }
+
+            courses = newCourses;
+            faculty = newFaculty;
+            rooms = newRooms;
+            sections = newSections;
+            timeSlots = newSlots;
+
+            dataLoaded = true;
+            timetableGenerated = false;
+            timetable.clear();
+            allocationStats.reset();
+
+            cout << "\nUniversity data loaded successfully!\n";
+            cout << "Courses: " << courses.size() << "\n";
+            cout << "Faculty: " << faculty.size() << "\n";
+            cout << "Rooms: " << rooms.size() << "\n";
+            cout << "Batches: " << sections.size() << "\n";
+            cout << "Time Slots: " << timeSlots.size() << "\n";
+
+            break;
+        }
+
+        case 2:
+        {
+            if (!dataLoaded)
+            {
+                cout << "Load university data first (Option 1).\n";
+                break;
+            }
+
+            allocationStats.reset();
+
+            timetable = TimetableAllocator::generate(
+                courses, rooms, timeSlots, allocationStats);
+
+            int required = 0;
+
+            for (const Course& c : courses)
+                required += c.lecturesPerWeek;
+
+            cout << "\nTimetable generation completed.\n";
+            cout << "Required lectures: " << required << "\n";
+            cout << "Scheduled lectures: " << timetable.size() << "\n";
+            cout << "Unscheduled lectures: "
+                 << required - (int)timetable.size() << "\n";
+
+            timetableGenerated = true;
+
+            bool valid = TimetableValidator::validate(
+                timetable, courses, rooms, timeSlots);
+
+            cout << "Validation: "
+                 << (valid ? "PASS" : "FAIL") << "\n";
+
+            if (valid)
+            {
+                bool exported = TimetableExporter::exportCSV(
+                    "../data/generated_timetable.csv",
+                    timetable, courses, faculty,
+                    sections, rooms, timeSlots);
+
+                cout << "CSV export: "
+                     << (exported ? "SUCCESS" : "FAILED")
+                     << "\n";
+            }
+
+            break;
+        }
+
+        case 3:
+        {
+            if (!timetableGenerated)
+            {
+                cout << "Generate a timetable first.\n";
+                break;
+            }
+
+            cout << "\n========== GENERATED TIMETABLE ==========\n";
+
+            for (const TimetableEntry& entry : timetable)
+            {
+                string courseName, facultyName, batchName, roomName;
+                string day;
+                int start = 0, end = 0;
+
+                for (const Course& c : courses)
+                    if (c.id == entry.courseId)
+                        courseName = c.name;
+
+                for (const Faculty& f : faculty)
+                    if (f.id == entry.facultyId)
+                        facultyName = f.name;
+
+                for (const Section& s : sections)
+                    if (s.id == entry.sectionId)
+                        batchName = s.name;
+
+                for (const Room& r : rooms)
+                    if (r.id == entry.roomId)
+                        roomName = r.name;
+
+                for (const TimeSlot& t : timeSlots)
+                    if (t.id == entry.slotId)
+                    {
+                        day = t.day;
+                        start = t.startHour;
+                        end = t.endHour;
+                    }
+
+                cout << day << " " << start << ":00-"
+                     << end << ":00 | "
+                     << courseName << " | "
+                     << facultyName << " | "
+                     << batchName << " | "
+                     << roomName << "\n";
+            }
+
+            break;
+        }
+
+        case 4:
+        {
+            if (!timetableGenerated)
+            {
+                cout << "Generate a timetable first.\n";
+                break;
+            }
+
+            cout << "\nSearch by:\n";
+            cout << "1. Course ID\n";
+            cout << "2. Faculty Name\n";
+            cout << "3. Batch Name\n";
+            cout << "Choice: ";
+
+            int searchChoice;
+
+            if (!(cin >> searchChoice))
+            {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "Invalid search choice.\n";
+                break;
+            }
+
+            int targetId = -1;
+            string query;
+
+            if (searchChoice == 1)
+            {
+                cout << "Enter Course ID: ";
+                if (!(cin >> targetId))
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "Invalid course ID.\n";
+                    break;
+                }
+            }
+            else if (searchChoice == 2 || searchChoice == 3)
+            {
+                cout << "Enter name: ";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                getline(cin, query);
+            }
+            else
+            {
+                cout << "Invalid search choice.\n";
+                break;
+            }
+
+            bool found = false;
+
+            for (const TimetableEntry& entry : timetable)
+            {
+                string courseName, facultyName, batchName, roomName;
+                string day;
+                int start = 0, end = 0;
+
+                for (const Course& c : courses)
+                    if (c.id == entry.courseId)
+                        courseName = c.name;
+
+                for (const Faculty& f : faculty)
+                    if (f.id == entry.facultyId)
+                        facultyName = f.name;
+
+                for (const Section& s : sections)
+                    if (s.id == entry.sectionId)
+                        batchName = s.name;
+
+                for (const Room& r : rooms)
+                    if (r.id == entry.roomId)
+                        roomName = r.name;
+
+                for (const TimeSlot& t : timeSlots)
+                    if (t.id == entry.slotId)
+                    {
+                        day = t.day;
+                        start = t.startHour;
+                        end = t.endHour;
+                    }
+
+                bool match =
+                    (searchChoice == 1 && entry.courseId == targetId) ||
+                    (searchChoice == 2 && facultyName == query) ||
+                    (searchChoice == 3 && batchName == query);
+
+                if (match)
+                {
+                    found = true;
+
+                    cout << day << " " << start << ":00-"
+                         << end << ":00 | "
+                         << courseName << " | "
+                         << facultyName << " | "
+                         << batchName << " | "
+                         << roomName << "\n";
+                }
+            }
+
+            if (!found)
+                cout << "No matching timetable entries found.\n";
+
+            break;
+        }
+
+        case 5:
+        {
+            if (!timetableGenerated)
+            {
+                cout << "Generate a timetable first.\n";
+                break;
+            }
+
+            bool valid = TimetableValidator::validate(
+                timetable, courses, rooms, timeSlots);
+
+            cout << "\nConstraint Diagnostics: "
+                 << (valid ? "PASS" : "FAIL") << "\n";
+
+            break;
+        }
+
+        case 6:
+        {
+            cout << "\nImplemented DAA Modules:\n";
+            cout << "Binary Search (Iterative/Recursive)\n";
+            cout << "Merge Sort and Quick Sort\n";
+            cout << "Maximum Subarray and Fast Exponentiation\n";
+            cout << "Greedy Scheduling and Resource Allocation\n";
+            cout << "Graph Algorithms and Huffman Coding\n";
+            cout << "Dynamic Programming Algorithms\n";
+            cout << "Backtracking, Branch and Bound (test modules)\n";
+            cout << "Flow, Matching, CRT and Matrix Algorithms\n";
+            cout << "\nUse the separate algorithm tests for detailed results.\n";
+
+            break;
+        }
+
+        
+case 7:
 {
-    cout << "\n";
-
-    // Find course name
-    for (const Course& c : courses)
+    if (!timetableGenerated)
     {
-        if (c.id == entry.courseId)
-        {
-            cout << "Subject: " << c.name << " | ";
-            break;
-        }
+        cout << "Generate a timetable first.\n";
+        break;
     }
 
-    // Find faculty name
-    for (const Faculty& f : faculty)
-    {
-        if (f.id == entry.facultyId)
-        {
-            cout << "Faculty: " << f.name << " | ";
-            break;
-        }
-    }
+    cout << "\n========== ALGORITHM COMPARISON ==========\n";
 
-    // Find batch name
-    for (const Section& s : sections)
-    {
-        if (s.id == entry.sectionId)
-        {
-            cout << "Batch: " << s.name << " | ";
-            break;
-        }
-    }
+    AlgorithmStats greedyStats;
+    AlgorithmStats backtrackStats;
 
-    // Find classroom
-    for (const Room& r : rooms)
-    {
-        if (r.id == entry.roomId)
-        {
-            cout << "Room: " << r.name << " | ";
-            break;
-        }
-    }
+    // -------- GREEDY --------
 
-    // Find day and time
-    for (const TimeSlot& t : timeSlots)
-    {
-        if (t.id == entry.slotId)
-        {
-            cout << "Day: " << t.day
-                 << " | Time: "
-                 << t.startHour << ":00-"
-                 << t.endHour << ":00";
-            break;
-        }
-    }
+    auto greedyStart = chrono::steady_clock::now();
 
-    cout << "\n";
-}
-
-
-cout << "\n========== TIMETABLE VALIDATION ==========\n";
-
-bool timetableValid = TimetableValidator::validate(
-    timetable, courses, rooms, timeSlots
-);
-
-if (timetableValid)
-{
-    cout << "PASS: All required lectures scheduled without clashes.\n";
-
-    bool exported = TimetableExporter::exportCSV(
-        "../data/generated_timetable.csv",
-        timetable,
-        courses,
-        faculty,
-        sections,
-        rooms,
-        timeSlots
+    auto greedySchedule = TimetableAllocator::generate(
+        courses, rooms, timeSlots, greedyStats
     );
 
-    if (exported)
-        cout << "Timetable exported successfully.\n";
+    auto greedyEnd = chrono::steady_clock::now();
+
+    double greedyMs =
+        chrono::duration<double, milli>(
+            greedyEnd - greedyStart
+        ).count();
+
+    bool greedyValid = TimetableValidator::validate(
+        greedySchedule, courses, rooms, timeSlots
+    );
+
+    cout << "\nGREEDY ALGORITHM\n";
+    cout << "Scheduled lectures: "
+         << greedySchedule.size() << "\n";
+    cout << "Valid timetable: "
+         << (greedyValid ? "YES" : "NO") << "\n";
+    cout << "Candidate checks: "
+         << greedyStats.comparisons << "\n";
+    cout << "Execution time: "
+         << greedyMs << " ms\n";
+
+
+    // -------- BACKTRACKING --------
+
+    auto backtrackStart = chrono::steady_clock::now();
+
+    auto backtrackResult = BacktrackingAllocator::generate(
+        courses, rooms, timeSlots, backtrackStats
+    );
+
+    auto backtrackEnd = chrono::steady_clock::now();
+
+    double backtrackMs =
+        chrono::duration<double, milli>(
+            backtrackEnd - backtrackStart
+        ).count();
+
+    cout << "\nBACKTRACKING ALGORITHM\n";
+
+    cout << "Complete timetable: "
+         << (backtrackResult.complete ? "YES" : "NO") << "\n";
+
+    cout << "Candidate checks: "
+         << backtrackStats.comparisons << "\n";
+
+    cout << "Execution time: "
+         << backtrackMs << " ms\n";
+
+    if (backtrackResult.complete)
+    {
+        bool backtrackValid = TimetableValidator::validate(
+            backtrackResult.timetable,
+            courses,
+            rooms,
+            timeSlots
+        );
+
+        cout << "Scheduled lectures: "
+             << backtrackResult.timetable.size() << "\n";
+
+        cout << "Valid timetable: "
+             << (backtrackValid ? "YES" : "NO") << "\n";
+    }
+    else if (backtrackResult.searchLimitReached)
+    {
+        cout << "Search limit reached: result inconclusive.\n";
+    }
     else
-        cout << "Error: Timetable export failed.\n";
+    {
+        cout << "No complete timetable found.\n";
+    }
+
+
+    // ---------- CONSTRAINT SHOCK TEST ----------
+
+    cout << "\n========== CONSTRAINT SHOCK ==========\n";
+
+    vector<Room> shockRooms;
+
+    // One normal classroom and one laboratory
+    shockRooms.push_back(rooms[1]); // Room-201, capacity 60
+    shockRooms.push_back(rooms[3]); // Lab-1, capacity 70
+
+    AlgorithmStats shockGreedyStats;
+    AlgorithmStats shockBacktrackStats;
+
+    auto shockGreedyStart = chrono::steady_clock::now();
+
+    auto shockGreedy = TimetableAllocator::generate(
+        courses, shockRooms, timeSlots, shockGreedyStats
+    );
+
+    auto shockGreedyEnd = chrono::steady_clock::now();
+
+    double shockGreedyMs =
+        chrono::duration<double, milli>(
+            shockGreedyEnd - shockGreedyStart
+        ).count();
+
+    auto shockBacktrackStart = chrono::steady_clock::now();
+
+    auto shockBacktrack = BacktrackingAllocator::generate(
+        courses, shockRooms, timeSlots, shockBacktrackStats
+    );
+
+    auto shockBacktrackEnd = chrono::steady_clock::now();
+
+    double shockBacktrackMs =
+        chrono::duration<double, milli>(
+            shockBacktrackEnd - shockBacktrackStart
+        ).count();
+
+    cout << "\nGREEDY (Reduced Rooms)\n";
+    cout << "Scheduled: " << shockGreedy.size() << "/24\n";
+    cout << "Candidate checks: "
+         << shockGreedyStats.comparisons << "\n";
+    cout << "Time: " << shockGreedyMs << " ms\n";
+
+    cout << "\nBACKTRACKING (Reduced Rooms)\n";
+    cout << "Complete: "
+         << (shockBacktrack.complete ? "YES" : "NO") << "\n";
+
+    cout << "Candidate checks: "
+         << shockBacktrackStats.comparisons << "\n";
+
+    cout << "Time: " << shockBacktrackMs << " ms\n";
+
+    if (shockBacktrack.searchLimitReached)
+        cout << "Search limit reached.\n";
+
+    cout << "======================================\n";
+
+    cout << "\n==========================================\n";
+
+    break;
 }
-else
-{
-    cout << "FAIL: Timetable contains violations or missing lectures.\n";
-    cout << "Export skipped.\n";
-}
 
 
+        case 0:
+            cout << "Exiting application.\n";
+            break;
 
-// ---------------- FAST EXPONENTIATION TEST ----------------
-
-AlgorithmStats powerStats;
-
-long long answer = FastExponentiation::power(2,15,powerStats);
-
-cout << "\nFast Exponentiation Test\n";
-cout << "2^15 = " << answer << "\n";
-cout << "Multiplications: "
-     << powerStats.operations << "\n\n";
-
-    cout << "=============================================\n";
-    cout << " UNIVERSITY TIMETABLE & CLASSROOM ALLOCATION\n";
-    cout << "                 ENGINE\n";
-    cout << "=============================================\n\n";
-
-    cout << "1. Load University Data\n";
-    cout << "2. Generate Timetable\n";
-    cout << "3. View Timetable\n";
-    cout << "4. Search Timetable\n";
-    cout << "5. Constraint Diagnostics\n";
-    cout << "6. Algorithm Analysis\n";
-    cout << "7. Run Benchmarks\n";
-    cout << "0. Exit\n";
+        default:
+            cout << "Invalid menu option.\n";
+        }
+    }
 
     return 0;
 }

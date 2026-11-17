@@ -19,4 +19,26 @@ add_executable(timetable
     src/timetable/TimetableAllocator.cpp
     src/timetable/TimetableValidator.cpp
     src/timetable/TimetableExporter.cpp
+    src/algorithms/greedy/GreedyScheduling.cpp
+    src/algorithms/greedy/GraphAlgorithms.cpp
+    src/algorithms/greedy/HuffmanCoding.cpp
+    src/algorithms/dp/DynamicProgramming.cpp
+    src/algorithms/dp/AdvancedDP.cpp
+    src/algorithms/backtracking/ExactAlgorithms.cpp
+    src/algorithms/extra/ExtraAlgorithms.cpp
+    src/timetable/BacktrackingAllocator.cpp
+)
+
+add_executable(exact_algorithms_test
+    tests/exact_algorithms_test.cpp
+    src/algorithms/backtracking/ExactAlgorithms.cpp
+)
+
+enable_testing()
+add_test(NAME exact_algorithms COMMAND exact_algorithms_test)
+
+add_executable(stress_test
+    benchmarks/StressTest.cpp
+    src/timetable/TimetableAllocator.cpp
+    src/timetable/TimetableValidator.cpp
 )
