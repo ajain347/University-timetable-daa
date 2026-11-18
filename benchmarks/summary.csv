@@ -1,0 +1,5 @@
+Scenario,Algorithm,Runs,AverageMs,MinimumMs,MaximumMs,AverageChecks,AverageScheduled,ValidRuns
+Normal,Greedy,20,0.185250,0.153792,0.231291,594.000000,24.000000,20
+Normal,Backtracking,20,0.413217,0.348625,0.496625,594.000000,24.000000,20
+ReducedRooms,Greedy,20,0.111773,0.103958,0.119542,300.000000,24.000000,20
+ReducedRooms,Backtracking,20,0.240863,0.224792,0.259167,300.000000,24.000000,20

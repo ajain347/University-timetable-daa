@@ -15,6 +15,7 @@
 #include "algorithms/searching/BinarySearch.h"
 #include "timetable/BacktrackingAllocator.h"
 #include <chrono>
+#include "algorithms/string_matching/StringMatching.h"
 
 using namespace std;
 
@@ -339,21 +340,116 @@ int main()
             break;
         }
 
-        case 6:
-        {
-            cout << "\nImplemented DAA Modules:\n";
-            cout << "Binary Search (Iterative/Recursive)\n";
-            cout << "Merge Sort and Quick Sort\n";
-            cout << "Maximum Subarray and Fast Exponentiation\n";
-            cout << "Greedy Scheduling and Resource Allocation\n";
-            cout << "Graph Algorithms and Huffman Coding\n";
-            cout << "Dynamic Programming Algorithms\n";
-            cout << "Backtracking, Branch and Bound (test modules)\n";
-            cout << "Flow, Matching, CRT and Matrix Algorithms\n";
-            cout << "\nUse the separate algorithm tests for detailed results.\n";
+        
+case 6:
+{
+    if (!dataLoaded)
+    {
+        cout << "Load university data first.\n";
+        break;
+    }
 
-            break;
-        }
+    cout << "\n===== STRING MATCHING ANALYSIS =====\n";
+
+    string query;
+
+    cout << "Enter subject/faculty/batch keyword: ";
+    cin >> ws;
+    getline(cin, query);
+
+    if (query.empty())
+    {
+        cout << "Empty search query.\n";
+        break;
+    }
+
+    // Build searchable text from actual university records.
+    string searchableText;
+
+    for (const Course& c : courses)
+        searchableText += c.code + " " + c.name + "\n";
+
+    for (const Faculty& f : faculty)
+        searchableText += f.name + "\n";
+
+    for (const Section& s : sections)
+        searchableText += s.name + "\n";
+
+    AlgorithmStats naiveStats;
+    AlgorithmStats rkStats;
+    AlgorithmStats faStats;
+    AlgorithmStats kmpStats;
+
+    using Clock = chrono::steady_clock;
+
+    auto start = Clock::now();
+    auto naiveMatches = StringMatching::naive(
+        searchableText, query, naiveStats);
+    auto end = Clock::now();
+
+    double naiveMs =
+        chrono::duration<double, milli>(end - start).count();
+
+    start = Clock::now();
+    auto rkMatches = StringMatching::rabinKarp(
+        searchableText, query, rkStats);
+    end = Clock::now();
+
+    double rkMs =
+        chrono::duration<double, milli>(end - start).count();
+
+    start = Clock::now();
+    auto faMatches = StringMatching::finiteAutomaton(
+        searchableText, query, faStats);
+    end = Clock::now();
+
+    double faMs =
+        chrono::duration<double, milli>(end - start).count();
+
+    start = Clock::now();
+    auto kmpMatches = StringMatching::kmp(
+        searchableText, query, kmpStats);
+    end = Clock::now();
+
+    double kmpMs =
+        chrono::duration<double, milli>(end - start).count();
+
+    cout << "\nAlgorithm         Matches  Comparisons  Time(ms)\n";
+    cout << "------------------------------------------------\n";
+
+    cout << "Naive             "
+         << naiveMatches.size() << "        "
+         << naiveStats.comparisons << "       "
+         << naiveMs << "\n";
+
+    cout << "Rabin-Karp        "
+         << rkMatches.size() << "        "
+         << rkStats.comparisons << "       "
+         << rkMs << "\n";
+
+    cout << "Finite Automaton  "
+         << faMatches.size() << "        "
+         << faStats.comparisons << "       "
+         << faMs << "\n";
+
+    cout << "KMP               "
+         << kmpMatches.size() << "        "
+         << kmpStats.comparisons << "       "
+         << kmpMs << "\n";
+
+    bool sameResults =
+        naiveMatches == rkMatches &&
+        naiveMatches == faMatches &&
+        naiveMatches == kmpMatches;
+
+    cout << "\nCorrectness agreement: "
+         << (sameResults ? "PASS" : "FAIL") << "\n";
+
+    cout << "Note: Search is case-sensitive.\n";
+
+    break;
+}
+
 
         
 case 7:

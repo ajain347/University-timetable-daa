@@ -27,6 +27,7 @@ add_executable(timetable
     src/algorithms/backtracking/ExactAlgorithms.cpp
     src/algorithms/extra/ExtraAlgorithms.cpp
     src/timetable/BacktrackingAllocator.cpp
+    src/algorithms/string_matching/StringMatching.cpp
 )
 
 add_executable(exact_algorithms_test
@@ -41,4 +42,33 @@ add_executable(stress_test
     benchmarks/StressTest.cpp
     src/timetable/TimetableAllocator.cpp
     src/timetable/TimetableValidator.cpp
+)
+
+add_executable(timetable_tests
+    tests/TimetableTests.cpp
+    src/timetable/TimetableAllocator.cpp
+    src/timetable/BacktrackingAllocator.cpp
+    src/timetable/TimetableValidator.cpp
+    src/algorithms/sorting/MergeSort.cpp
+    src/algorithms/sorting/QuickSort.cpp
+    src/algorithms/searching/BinarySearch.cpp
+    src/algorithms/string_matching/StringMatching.cpp
+)
+
+add_test(
+    NAME timetable_regression
+    COMMAND timetable_tests
+)
+
+add_executable(final_benchmark
+    benchmarks/FinalBenchmark.cpp
+    src/data/DataLoader.cpp
+    src/validation/DataValidator.cpp
+    src/timetable/TimetableAllocator.cpp
+    src/timetable/BacktrackingAllocator.cpp
+    src/timetable/TimetableValidator.cpp
+)
+
+add_executable(benchmark_summary
+    benchmarks/BenchmarkSummary.cpp
 )
